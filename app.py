@@ -85,7 +85,7 @@ class NeuronaAvanzada:
             },
             "contextual": {
                 "requiere_investigacion": any(p in texto for p in ["futuro", "nuevo", "innovar"]),
-                "componente_etico": any(p in texto for p in ["deber",ético","moral"]),
+                "componente_etico": any(p in texto for p in ["deber", "ético", "moral"]),
                 "potencial_creativo": "alto" if any(p in texto for p in ["crear","inventar","imaginar"]) else "medio"
             }
         }
