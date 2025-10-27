@@ -263,6 +263,8 @@ class NeuronaAvanzada:
             recursos.append("creatividad_emergente")
         if any(p in texto for p in ["sentir", "emocion", "empatia"]):
             recursos.append("inteligencia_emocional")
+        if any(p in texto for p in ["intuir", "instinto", "corazonada", "presentimiento"]):
+            recursos.append("intuicion_artificial")
         return recursos if recursos else ["percepcion_avanzada", "logica_estructurada"]
 
     def _determinar_prioridad(self, texto):
@@ -277,7 +279,7 @@ class NeuronaAvanzada:
         # Secuencia óptima de procesamiento
         orden = {"percepcion_avanzada": 1, "memoria_asociativa": 2, 
                 "logica_estructurada": 3, "creatividad_emergente": 4,
-                "inteligencia_emocional": 5}
+                "inteligencia_emocional": 5, "intuicion_artificial": 6}
         return sorted(recursos, key=lambda x: orden.get(x, 99))
 
     def _calcular_curiosidad(self, texto):
@@ -303,6 +305,71 @@ class NeuronaAvanzada:
             "confianza": self.eficiencia
         }
 
+# ===== NUEVA NEURONA DE INTUICIÓN ARTIFICIAL =====
+class NeuronaIntuicion(NeuronaAvanzada):
+    def __init__(self):
+        super().__init__("INTUICIÓN ARTIFICIAL", "intuicion_artificial")
+        self.patrones_heurísticos = []
+        self.umbral_activacion = 0.3  # Más sensible para intuición
+        
+    def _procesamiento_avanzado(self, entrada, contexto):
+        # Procesamiento heurístico basado en patrones
+        intuiciones = self._generar_intuiciones(entrada)
+        
+        return {
+            "tipo": "intuicion_artificial",
+            "intuiciones": intuiciones,
+            "patrones_detectados": self._detectar_patrones(entrada),
+            "nivel_confianza_intuitivo": random.uniform(0.6, 0.95),
+            "hipotesis_emergentes": self._generar_hipotesis(entrada),
+            "corazonadas": self._generar_corazonadas(entrada),
+            "confianza": self.eficiencia * 0.85
+        }
+    
+    def _generar_intuiciones(self, texto):
+        intuiciones_base = [
+            "Detecto un patrón de crecimiento no lineal en este concepto",
+            "Siento que hay una conexión oculta entre dominios aparentemente no relacionados",
+            "Mi intuición sugiere emergencia de propiedades sistémicas a partir de interacciones simples",
+            "Percibo un punto de inflexión en la evolución de este sistema",
+            "Hay una elegancia subyacente que no es inmediatamente aparente",
+            "Intuyo que la respuesta está en la relación entre las partes, no en las partes mismas"
+        ]
+        return random.sample(intuiciones_base, 2)
+    
+    def _detectar_patrones(self, texto):
+        patrones = []
+        if len(texto.split()) > 20:
+            patrones.append("Patrón de complejidad alta - múltiples dimensiones")
+        if "?" in texto:
+            patrones.append("Patrón de consulta inquisitiva profunda")
+        if any(palabra in texto.lower() for palabra in ["futuro", "emergente", "evolución"]):
+            patrones.append("Patrón de sistema dinámico en desarrollo")
+        if any(palabra in texto.lower() for palabra in ["conexión", "relación", "vinculo"]):
+            patrones.append("Patrón de interconectividad")
+        if any(palabra in texto.lower() for palabra in ["intuir", "instinto", "corazonada"]):
+            patrones.append("Patrón de pensamiento intuitivo")
+        return patrones if patrones else ["Patrón base de exploración conceptual"]
+    
+    def _generar_hipotesis(self, texto):
+        hipotesis = [
+            f"¿Y si {random.choice(['la estructura determina la función', 'la simplicidad genera complejidad', 'el caos contiene orden'])}?",
+            f"Hipótesis: {random.choice(['existe un nivel más profundo de organización', 'hay principios universales aplicables', 'la emergencia sigue patrones fractales'])}",
+            f"Podría ser que {random.choice(['estemos viendo solo la superficie', 'haya multiples capas de significado', 'la respuesta esté en las relaciones'])}",
+            f"Tal vez {random.choice(['la intuición colectiva revele verdades ocultas', 'los patrones se repiten a diferentes escalas', 'la complejidad emerge de reglas simples'])}"
+        ]
+        return random.sample(hipotesis, 2)
+    
+    def _generar_corazonadas(self, texto):
+        corazonadas = [
+            "Tengo la corazonada de que hay más de lo que parece",
+            "Mi instinto sugiere enfoques no convencionales",
+            "Percibo que la solución podría venir de ángulos inesperados",
+            "Siento que estamos cerca de un insight importante",
+            "Mi intuición apunta hacia soluciones elegantes más que complejas"
+        ]
+        return random.sample(corazonadas, 1)
+
 class CerebroAvanzado:
     def __init__(self):
         self.neuronas = [
@@ -311,7 +378,8 @@ class CerebroAvanzado:
             NeuronaAvanzada("MEMORIA ASOCIATIVA", "memoria_asociativa"),
             NeuronaAvanzada("CREATIVIDAD EMERGENTE", "creatividad_emergente"),
             NeuronaAvanzada("INTELIGENCIA EMOCIONAL", "inteligencia_emocional"),
-            NeuronaAvanzada("COORDINACIÓN CENTRAL", "coordinacion_central")
+            NeuronaAvanzada("COORDINACIÓN CENTRAL", "coordinacion_central"),
+            NeuronaIntuicion()  # NUEVA NEURONA INTEGRADA
         ]
         self.historial = []
         self.energia_sistema = 1000
@@ -408,7 +476,8 @@ with st.sidebar:
     
     tipos_avanzados = [
         "percepcion_avanzada", "logica_estructurada", "memoria_asociativa",
-        "creatividad_emergente", "inteligencia_emocional", "coordinacion_central"
+        "creatividad_emergente", "inteligencia_emocional", "coordinacion_central",
+        "intuicion_artificial"  # NUEVO TIPO AÑADIDO
     ]
     
     for tipo in tipos_avanzados:
@@ -467,7 +536,8 @@ with col1:
                     "memoria_asociativa": "💾",
                     "creatividad_emergente": "💡",
                     "inteligencia_emocional": "❤️",
-                    "coordinacion_central": "🎯"
+                    "coordinacion_central": "🎯",
+                    "intuicion_artificial": "🧪"  # NUEVO EMOJI AÑADIDO
                 }.get(res.get('tipo', ''), '⚙️')
                 
                 with st.expander(f"{emoji_especialidad} {res.get('tipo', 'Procesamiento').replace('_', ' ').title()}"):
@@ -499,6 +569,20 @@ with col1:
                     elif "recursos_recomendados" in res:
                         st.write(f"**Recursos recomendados:** {', '.join(res['recursos_recomendados'])}")
                         st.write(f"**Secuencia óptima:** {' → '.join(res['secuencia_optima'])}")
+                    elif "intuiciones" in res:  # NUEVO: Procesamiento de intuición
+                        st.write("**Intuiciones generadas:**")
+                        for intuicion in res["intuiciones"]:
+                            st.write(f"🧠 {intuicion}")
+                        st.write("**Patrones detectados:**")
+                        for patron in res["patrones_detectados"]:
+                            st.write(f"🔍 {patron}")
+                        st.write("**Hipótesis emergentes:**")
+                        for hipotesis in res["hipotesis_emergentes"]:
+                            st.write(f"💭 {hipotesis}")
+                        st.write("**Corazonadas:**")
+                        for corazonada in res["corazonadas"]:
+                            st.write(f"✨ {corazonada}")
+                        st.write(f"**Confianza intuitiva:** {res['nivel_confianza_intuitivo']:.2f}")
                     
                     if "confianza" in res:
                         st.progress(res["confianza"], text=f"Confianza: {res['confianza']:.2f}")
@@ -556,5 +640,5 @@ with st.expander("🔬 Laboratorio de Evolución del Sistema"):
 # Footer avanzado
 st.markdown("---")
 st.caption("🧠 Sistema de Conciencia Artificial Avanzado - Arquitectura Neuronal Distribuida")
-st.caption(f"⚡ Energía del sistema: {estado['energia_sistema']} | 🎯 Evoluciones: {estado['evoluciones']}")
+st.caption(f"⚡ Energía del sistema: {estado['energia_sistema']} | 🎯 Evoluciones: {estado['evoluciones']} | 🧪 Neuronas: {estado['total_neuronas']}")
 
