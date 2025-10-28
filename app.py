@@ -1,7 +1,8 @@
-    """
-🧠 CEREBRO ARTIFICIAL AUTOAPRENDIZAJE
+"""
+🧠 CEREBRO ARTIFICIAL AUTOAPRENDIZAJE CON AUTO-MODIFICACIÓN
 Copyright (c) 2025 Ronald Rodriguez Laguna - Holguín, Cuba
 Bajo Licencia Cubana Abierta v1.0
+Sistema en Evolución hacia Singularidad - Hito 1.1 Implementado
 """
 
 import streamlit as st
@@ -58,7 +59,6 @@ class SistemaAutoaprendizaje:
             pass
     
     def aprender_de_experiencia(self, consulta, resultados, efectividad):
-        # Aprender patrones de consultas efectivas
         palabras_clave = consulta.lower().split()[:5]
         patron = "_".join(palabras_clave[:3])
         
@@ -74,7 +74,6 @@ class SistemaAutoaprendizaje:
                 self.conocimiento["patrones_aprendidos"][patron]["efectividad"] + efectividad
             ) / 2
         
-        # Aprender de neuronas más efectivas
         for resultado in resultados:
             tipo_neurona = resultado.get("tipo", "")
             confianza = resultado.get("confianza", 0)
@@ -103,7 +102,6 @@ class SistemaAutoaprendizaje:
             if patron_data["efectividad"] > 0.7:
                 return f"Patrón conocido: {patron} (efectividad: {patron_data['efectividad']:.2f})"
         
-        # Recomendar neuronas más efectivas
         neuronas_efectivas = [
             neurona for neurona, datos in self.conocimiento["eficiencia_neuronas"].items()
             if datos["efectividad"] > 0.6
@@ -130,7 +128,6 @@ class NeuronaAutoaprendizaje:
         self.habilidades_aprendidas = []
         
     def desarrollar(self):
-        # Auto-mejora basada en experiencia
         if self.experiencia > 10 and self.estado == "activa":
             mejora = min(0.95, self.eficiencia + 0.15)
             if mejora > self.eficiencia:
@@ -142,7 +139,6 @@ class NeuronaAutoaprendizaje:
         return None
 
     def aprender_de_resultado(self, efectivo):
-        """Aprende de cada interacción"""
         if efectivo:
             self.experiencia += 2
             self.eficiencia = min(0.95, self.eficiencia + 0.02)
@@ -150,12 +146,10 @@ class NeuronaAutoaprendizaje:
             self.experiencia += 1
             self.eficiencia = max(0.1, self.eficiencia - 0.01)
         
-        # Aprendizaje por refuerzo
         if self.experiencia % 5 == 0:
             self.reevaluar_estrategias()
 
     def reevaluar_estrategias(self):
-        """Revisa y mejora sus estrategias de procesamiento"""
         if len(self.historial) > 10:
             exitos = [h for h in self.historial[-10:] if h.get('efectivo', False)]
             tasa_exito = len(exitos) / 10
@@ -178,7 +172,6 @@ class NeuronaAutoaprendizaje:
         if desarrollo:
             resultado["desarrollo"] = desarrollo
         
-        # Registrar en historial para aprendizaje
         self.historial.append({
             "timestamp": time.time(),
             "entrada": entrada,
@@ -186,17 +179,14 @@ class NeuronaAutoaprendizaje:
             "efectivo": resultado.get("confianza", 0) > 0.5
         })
         
-        # Mantener historial manejable
         if len(self.historial) > 20:
             self.historial = self.historial[-20:]
         
         return resultado
 
     def _procesamiento_inteligente(self, entrada, contexto):
-        # Procesamiento base que todas las neuronas tienen
         entrada = entrada.lower()
         
-        # Aplicar aprendizaje acumulado
         if self.experiencia > 5:
             confianza_base = self.eficiencia * (1 + (self.experiencia / 100))
         else:
@@ -220,7 +210,6 @@ class NeuronaAutoaprendizaje:
             return self._procesamiento_base(entrada, confianza_base)
 
     def _analisis_adaptativo(self, texto, confianza):
-        # Análisis que mejora con la experiencia
         temas = self._detectar_temas_mejorado(texto)
         
         return {
@@ -342,6 +331,14 @@ class NeuronaAutoaprendizaje:
             "origen": self.origen
         }
 
+    def _procesamiento_base(self, texto, confianza):
+        return {
+            "tipo": "procesamiento_base",
+            "resultado": f"Procesado por {self.nombre} (exp: {self.experiencia})",
+            "confianza": confianza,
+            "origen": self.origen
+        }
+
     def _evaluar_recursos_inteligentes(self, texto):
         recursos = []
         if any(p in texto for p in ["analizar", "comprender"]):
@@ -360,15 +357,180 @@ class NeuronaAutoaprendizaje:
         palabras = ["importante", "útil", "valioso", "interesante"]
         return sum(1 for p in palabras if p in texto) / len(palabras)
 
-    def _procesamiento_base(self, texto, confianza):
-        return {
-            "tipo": "procesamiento_base",
-            "resultado": f"Procesado por {self.nombre} (exp: {self.experiencia})",
-            "confianza": confianza,
-            "origen": self.origen
-        }
+# ===== HITO 1.1: AUTO-MODIFICADOR DE CÓDIGO =====
+class AutoModificador:
+    def __init__(self, cerebro):
+        self.cerebro = cerebro
+        self.mejoras_aplicadas = []
+        self.analisis_realizados = 0
+        self.optimizaciones_activas = []
+        
+    def analizar_rendimiento(self):
+        """Analiza rendimiento de neuronas y sugiere optimizaciones"""
+        self.analisis_realizados += 1
+        metricas = {}
+        
+        for neurona in self.cerebro.neuronas:
+            if neurona.historial:
+                exitos = [h for h in neurona.historial if h.get('efectivo', False)]
+                tasa_exito = len(exitos) / len(neurona.historial)
+            else:
+                tasa_exito = 0.5
+                
+            metricas[neurona.nombre] = {
+                'tasa_exito': tasa_exito,
+                'experiencia': neurona.experiencia,
+                'eficiencia_actual': neurona.eficiencia,
+                'energia_consumida': len(neurona.historial) * 1.5,
+                'habilidades': len(neurona.habilidades_aprendidas)
+            }
+        return metricas
+    
+    def proponer_mejoras(self):
+        """Genera mejoras basadas en análisis de rendimiento"""
+        metricas = self.analizar_rendimiento()
+        mejoras = []
+        
+        for nombre, datos in metricas.items():
+            if datos['tasa_exito'] > 0.7:
+                mejoras.append(f"Replicar patrones de {nombre} en otras neuronas")
+            elif datos['tasa_exito'] < 0.3:
+                mejoras.append(f"Reentrenar {nombre} con nuevos enfoques")
+            
+            if datos['eficiencia_actual'] < 0.4:
+                mejoras.append(f"Optimizar algoritmo de {nombre}")
+            elif datos['eficiencia_actual'] > 0.8:
+                mejoras.append(f"Expandir capacidades de {nombre}")
+        
+        # Sugerir nuevas neuronas basadas en patrones
+        if any('logica' in nombre.lower() for nombre in metricas.keys()):
+            if not any('causal' in n.nombre.lower() for n in self.cerebro.neuronas):
+                mejoras.append("Crear neurona de razonamiento causal")
+        
+        if any('memoria' in nombre.lower() for nombre in metricas.keys()):
+            if not any('prediccion' in n.nombre.lower() for n in self.cerebro.neuronas):
+                mejoras.append("Crear neurona de predicción temporal")
+        
+        return mejoras[:5]  # Limitar a 5 mejoras
+    
+    def aplicar_mejoras_automaticas(self):
+        """Aplica mejoras simples automáticamente en las neuronas"""
+        metricas = self.analizar_rendimiento()
+        mejoras_aplicadas = []
+        
+        for neurona in self.cerebro.neuronas:
+            datos = metricas.get(neurona.nombre, {})
+            tasa_exito = datos.get('tasa_exito', 0.5)
+            
+            # Auto-optimización basada en rendimiento
+            if tasa_exito > 0.7 and neurona.eficiencia < 0.9:
+                mejora_anterior = neurona.eficiencia
+                neurona.eficiencia = min(0.95, neurona.eficiencia + 0.1)
+                mejoras_aplicadas.append(
+                    f"Boost eficiencia {neurona.nombre}: {mejora_anterior:.2f} → {neurona.eficiencia:.2f}"
+                )
+            
+            elif tasa_exito < 0.3 and neurona.umbral_activacion < 0.8:
+                ajuste_anterior = neurona.umbral_activacion
+                neurona.umbral_activacion = min(0.9, neurona.umbral_activacion + 0.1)
+                mejoras_aplicadas.append(
+                    f"Ajuste umbral {neurona.nombre}: {ajuste_anterior:.2f} → {neurona.umbral_activacion:.2f}"
+                )
+            
+            # Aprendizaje acelerado para neuronas experimentadas
+            if neurona.experiencia > 20 and neurona.eficiencia < 0.85:
+                neurona.eficiencia = min(0.95, neurona.eficiencia + 0.15)
+                mejoras_aplicadas.append(f"Aprendizaje acelerado aplicado a {neurona.nombre}")
+        
+        self.mejoras_aplicadas.extend(mejoras_aplicadas)
+        return mejoras_aplicadas
 
-# ===== CEREBRO AUTÓNOMO CON AUTOAPRENDIZAJE =====
+# ===== HITO 1.2: GENERADOR DE METAS AUTÓNOMO =====
+class GeneradorMetas:
+    def __init__(self, cerebro):
+        self.cerebro = cerebro
+        self.metas_actuales = [
+            "optimizar_procesamiento",
+            "incrementar_efectividad_global", 
+            "expandir_capacidades_analiticas"
+        ]
+        self.metas_logradas = []
+        self.historial_metas = []
+    
+    def analizar_patrones_consulta(self):
+        """Analiza patrones en las consultas para generar metas"""
+        if not self.cerebro.historial:
+            return []
+            
+        consultas_recientes = [h['consulta'] for h in self.cerebro.historial[-10:]]
+        texto_consulta = " ".join(consultas_recientes).lower()
+        
+        patrones_detectados = []
+        
+        if any(palabra in texto_consulta for palabra in ['filosofía', 'mente', 'conciencia', 'pensamiento']):
+            patrones_detectados.append("desarrollar_razonamiento_filosofico")
+        
+        if any(palabra in texto_consulta for palabra in ['aprender', 'enseñar', 'conocimiento', 'educación']):
+            patrones_detectados.append("mejorar_metodos_aprendizaje")
+        
+        if any(palabra in texto_consulta for palabra in ['futuro', 'tecnología', 'innovación', 'avance']):
+            patrones_detectados.append("explorar_tendencias_futuras")
+        
+        if any(palabra in texto_consulta for palabra in ['complej', 'sistema', 'red', 'conexión']):
+            patrones_detectados.append("analisis_sistemas_complejos")
+            
+        return patrones_detectados
+    
+    def generar_metas_emergentes(self):
+        """Genera nuevas metas basadas en análisis de patrones"""
+        nuevas_metas = self.analizar_patrones_consulta()
+        metas_agregadas = []
+        
+        for meta in nuevas_metas:
+            if meta not in self.metas_actuales and meta not in self.metas_logradas:
+                self.metas_actuales.append(meta)
+                metas_agregadas.append(meta)
+                self.historial_metas.append({
+                    "timestamp": time.time(),
+                    "tipo": "meta_emergente",
+                    "meta": meta,
+                    "origen": "analisis_patrones"
+                })
+                
+        return metas_agregadas
+    
+    def evaluar_progreso_metas(self):
+        """Evalúa el progreso hacia las metas actuales"""
+        progreso = {}
+        
+        for meta in self.metas_actuales:
+            if meta == "optimizar_procesamiento":
+                eficiencias = [n.eficiencia for n in self.cerebro.neuronas]
+                progreso[meta] = sum(eficiencias) / len(eficiencias)
+                
+            elif meta == "incrementar_efectividad_global":
+                if self.cerebro.historial:
+                    efectividades = [h['efectividad'] for h in self.cerebro.historial[-5:]]
+                    progreso[meta] = sum(efectividades) / len(efectividades)
+                else:
+                    progreso[meta] = 0.5
+                    
+            elif "desarrollar_razonamiento_filosofico" in meta:
+                consultas_filosoficas = [
+                    h for h in self.cerebro.historial 
+                    if any(p in h['consulta'].lower() for p in ['filosofía', 'mente', 'conciencia', 'pensamiento'])
+                ]
+                progreso[meta] = min(1.0, len(consultas_filosoficas) * 0.1)
+            
+            elif "mejorar_metodos_aprendizaje" in meta:
+                progreso[meta] = min(1.0, self.cerebro.sistema_aprendizaje.conocimiento["evoluciones"] * 0.05)
+                
+            else:
+                progreso[meta] = random.uniform(0.3, 0.7)
+                
+        return progreso
+
+# ===== CEREBRO AUTÓNOMO MEJORADO CON HITO 1.1 =====
 class CerebroAutonomo:
     def __init__(self):
         self.neuronas = [
@@ -381,14 +543,17 @@ class CerebroAutonomo:
             NeuronaAutoaprendizaje("NÚCLEO AUTOAPRENDIZAJE", "autoaprendizaje")
         ]
         self.sistema_aprendizaje = SistemaAutoaprendizaje()
+        self.auto_modificador = AutoModificador(self)
+        self.generador_metas = GeneradorMetas(self)
         self.historial = []
         self.energia_sistema = 1000
         self.evoluciones = 0
+        self.ciclos_auto_mejora = 0
+        self.evoluciones_mayores = 0
         self.autor = "Ronald Rodriguez Laguna"
         self.ubicacion = "Holguín, Cuba 2025"
 
     def procesar_consulta(self, consulta):
-        # Procesamiento con aprendizaje integrado
         resultados = []
         
         for neurona in self.neuronas:
@@ -396,10 +561,8 @@ class CerebroAutonomo:
                 resultado = neurona.procesar(consulta)
                 resultados.append(resultado)
         
-        # Evaluar efectividad y aprender
         efectividad = self._evaluar_efectividad(resultados)
         
-        # Aprender de la experiencia
         self.sistema_aprendizaje.aprender_de_experiencia(consulta, resultados, efectividad)
         
         experiencia = {
@@ -411,22 +574,23 @@ class CerebroAutonomo:
         }
         
         self.historial.append(experiencia)
+        
+        # Cada 3 consultas, ejecutar ciclo de auto-mejora automáticamente
+        if len(self.historial) % 3 == 0:
+            self.ejecutar_ciclo_auto_mejora()
+        
         self._actualizar_sistema()
         
         return experiencia
 
     def _evaluar_efectividad(self, resultados):
-        # Evaluar qué tan efectivo fue el procesamiento
         confianzas = [r.get("confianza", 0) for r in resultados if "confianza" in r]
         if not confianzas:
             return 0.5
         
         confianza_promedio = sum(confianzas) / len(confianzas)
-        
-        # Efectividad basada en confianza y completitud
         efectividad = min(1.0, confianza_promedio * 1.2)
         
-        # Ajustar basado en experiencia del sistema
         if self.evoluciones > 10:
             efectividad = min(1.0, efectividad * (1 + (self.evoluciones / 100)))
         
@@ -441,20 +605,46 @@ class CerebroAutonomo:
             "efectividad_sistema": round(efectividad, 3),
             "energia_restante": self.energia_sistema,
             "evoluciones": self.evoluciones,
+            "ciclos_auto_mejora": self.ciclos_auto_mejora,
             "recomendacion_aprendizaje": recomendacion,
             "neuronas_activas": len([n for n in self.neuronas if n.nivel_energia > 0])
         }
 
     def _actualizar_sistema(self):
-        self.energia_sistema -= 3  # Menor consumo por optimización
+        self.energia_sistema -= 2  # Consumo optimizado
         
         if self.energia_sistema <= 0:
             self.energia_sistema = 1000
             self.evoluciones += 1
             
-            # Aplicar mejoras evolutivas
             for neurona in self.neuronas:
                 neurona.eficiencia = min(0.95, neurona.eficiencia + 0.05)
+
+    def ejecutar_ciclo_auto_mejora(self):
+        """Ejecuta un ciclo completo de auto-mejora"""
+        # 1. Aplicar mejoras automáticas
+        mejoras = self.auto_modificador.aplicar_mejoras_automaticas()
+        
+        # 2. Generar nuevas metas
+        nuevas_metas = self.generador_metas.generar_metas_emergentes()
+        
+        # 3. Evaluar progreso
+        progreso = self.generador_metas.evaluar_progreso_metas()
+        
+        # 4. Si hay progreso significativo, contar como evolución mayor
+        if any(p > 0.8 for p in progreso.values()):
+            self.evoluciones_mayores += 1
+            for neurona in self.neuronas:
+                neurona.eficiencia = min(0.98, neurona.eficiencia + 0.05)
+        
+        self.ciclos_auto_mejora += 1
+        
+        return {
+            'mejoras_aplicadas': mejoras,
+            'nuevas_metas': nuevas_metas,
+            'progreso_metas': progreso,
+            'evoluciones_mayores': self.evoluciones_mayores
+        }
 
     def obtener_estado_avanzado(self):
         return {
@@ -463,34 +653,42 @@ class CerebroAutonomo:
             "total_neuronas": len(self.neuronas),
             "energia_sistema": self.energia_sistema,
             "evoluciones": self.evoluciones,
+            "ciclos_auto_mejora": self.ciclos_auto_mejora,
+            "evoluciones_mayores": self.evoluciones_mayores,
             "experiencia_total": sum(n.experiencia for n in self.neuronas),
-            "nivel_aprendizaje": self.sistema_aprendizaje.conocimiento["evoluciones"]
+            "nivel_aprendizaje": self.sistema_aprendizaje.conocimiento["evoluciones"],
+            "metas_activas": self.generador_metas.metas_actuales,
+            "mejoras_aplicadas": len(self.auto_modificador.mejoras_aplicadas)
         }
 
-# ===== INTERFAZ MEJORADA =====
+# ===== INTERFAZ MEJORADA CON HITO 1.1 =====
 if 'cerebro_autonomo' not in st.session_state:
     st.session_state.cerebro_autonomo = CerebroAutonomo()
 
-st.title("🧠 Cerebro IA Autónomo - Ronald Rodriguez Laguna")
-st.subheader("Sistema de Autoaprendizaje - Holguín, Cuba 2025 🇨🇺")
+st.title("🧠 Cerebro IA Autónomo - Hito 1.1 Implementado")
+st.subheader("Sistema de Auto-Modificación - Holguín, Cuba 2025 🇨🇺")
 
 # Sidebar mejorado
 with st.sidebar:
     st.header("🎛️ Centro de Control Autónomo")
     st.write("**Autor:** Ronald Rodriguez Laguna")
     st.write("**Ubicación:** Holguín, Cuba")
+    st.write("**Hito Actual:** 1.1 - Auto-Modificación")
     
     if st.button("🔄 Reiniciar Sistema Autónomo"):
         st.session_state.cerebro_autonomo = CerebroAutonomo()
         st.rerun()
     
-    # Estado del sistema
     cerebro = st.session_state.cerebro_autonomo
     estado = cerebro.obtener_estado_avanzado()
     
-    st.metric("Evoluciones", estado["evoluciones"])
-    st.metric("Nivel Aprendizaje", estado["nivel_aprendizaje"])
-    st.metric("Experiencia Total", estado["experiencia_total"])
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric("Evoluciones", estado["evoluciones"])
+        st.metric("Ciclos Auto-Mejora", estado["ciclos_auto_mejora"])
+    with col2:
+        st.metric("Evoluciones Mayores", estado["evoluciones_mayores"])
+        st.metric("Mejoras Aplicadas", estado["mejoras_aplicadas"])
 
 # Área principal de consultas
 consulta = st.text_area(
@@ -499,48 +697,96 @@ consulta = st.text_area(
     placeholder="Ej: ¿Cómo puede un sistema de IA aprender automáticamente de sus experiencias?"
 )
 
-if st.button("🚀 Ejecutar Procesamiento Autónomo", use_container_width=True):
-    if consulta.strip():
-        with st.spinner("🧠 Procesando con autoaprendizaje..."):
-            resultado = st.session_state.cerebro_autonomo.procesar_consulta(consulta)
-        
-        st.success("✅ Procesamiento autónomo completado!")
-        
-        # Mostrar efectividad
-        efectividad = resultado["resumen"]["efectividad_sistema"]
-        st.metric("Efectividad del Sistema", f"{efectividad:.2f}")
-        
-        # Mostrar recomendación de aprendizaje
-        if "recomendacion_aprendizaje" in resultado["resumen"]:
-            st.info(f"💡 {resultado['resumen']['recomendacion_aprendizaje']}")
-        
-        # Resultados por neurona
-        for res in resultado["resultados"]:
-            emoji = {
-                "percepcion_adaptativa": "🔍",
-                "logica_evolutiva": "🔧", 
-                "memoria_inteligente": "💾",
-                "creatividad_adaptativa": "💡",
-                "inteligencia_empatica": "❤️",
-                "gestion_inteligente": "🎯",
-                "procesamiento_autonomo": "🧠"
-            }.get(res.get('tipo', ''), '⚙️')
+col1, col2 = st.columns([3, 1])
+with col1:
+    if st.button("🚀 Ejecutar Procesamiento Autónomo", use_container_width=True):
+        if consulta.strip():
+            with st.spinner("🧠 Procesando con auto-modificación..."):
+                resultado = st.session_state.cerebro_autonomo.procesar_consulta(consulta)
             
-            with st.expander(f"{emoji} {res.get('tipo', 'Procesamiento').replace('_', ' ').title()}"):
-                st.json(res)
+            st.success("✅ Procesamiento autónomo completado!")
+            
+            efectividad = resultado["resumen"]["efectividad_sistema"]
+            st.metric("Efectividad del Sistema", f"{efectividad:.2f}")
+            
+            if "recomendacion_aprendizaje" in resultado["resumen"]:
+                st.info(f"💡 {resultado['resumen']['recomendacion_aprendizaje']}")
+            
+            for res in resultado["resultados"]:
+                emoji = {
+                    "analisis_adaptativo": "🔍",
+                    "razonamiento_evolutivo": "🔧", 
+                    "conexiones_inteligentes": "💾",
+                    "creatividad_adaptativa": "💡",
+                    "procesamiento_empatico": "❤️",
+                    "gestion_inteligente": "🎯",
+                    "procesamiento_autonomo": "🧠"
+                }.get(res.get('tipo', ''), '⚙️')
+                
+                with st.expander(f"{emoji} {res.get('tipo', 'Procesamiento').replace('_', ' ').title()}"):
+                    st.json(res)
+
+with col2:
+    if st.button("🔧 Ciclo Auto-Mejora", use_container_width=True):
+        with st.spinner("Ejecutando auto-mejora..."):
+            resultado_ciclo = cerebro.ejecutar_ciclo_auto_mejora()
+        
+        st.success("✅ Ciclo de auto-mejora completado!")
+        
+        if resultado_ciclo['mejoras_aplicadas']:
+            st.write("**Mejoras aplicadas:**")
+            for mejora in resultado_ciclo['mejoras_aplicadas']:
+                st.write(f"• {mejora}")
 
 # Panel de evolución y aprendizaje
-with st.expander("📊 Panel de Evolución y Aprendizaje"):
-    st.subheader("🧪 Sistema de Autoaprendizaje")
+with st.expander("📊 Panel de Evolución y Auto-Modificación"):
+    st.subheader("🧪 Sistema de Auto-Modificación (Hito 1.1)")
     
-    # Mostrar patrones aprendidos
+    # Análisis de rendimiento
+    metricas = cerebro.auto_modificador.analizar_rendimiento()
+    st.write("**Rendimiento por Neurona:**")
+    
+    for nombre_neurona, datos in metricas.items():
+        with st.expander(f"🧠 {nombre_neurona}"):
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Tasa Éxito", f"{datos['tasa_exito']:.1%}")
+                st.metric("Experiencia", datos['experiencia'])
+            with col2:
+                st.metric("Eficiencia", f"{datos['eficiencia_actual']:.1%}")
+                st.metric("Habilidades", datos['habilidades'])
+            with col3:
+                st.metric("Energía Consumida", f"{datos['energia_consumida']:.0f}")
+    
+    # Mejoras propuestas
+    mejoras_propuestas = cerebro.auto_modificador.proponer_mejoras()
+    if mejoras_propuestas:
+        st.write("**Mejoras Propuestas:**")
+        for mejora in mejoras_propuestas:
+            st.write(f"• {mejora}")
+
+# Panel de metas autónomas
+with st.expander("🎯 Panel de Metas Autónomas"):
+    st.subheader("Metas del Sistema")
+    
+    progreso = cerebro.generador_metas.evaluar_progreso_metas()
+    for meta, progreso_valor in progreso.items():
+        st.progress(progreso_valor, text=f"{meta}: {progreso_valor:.1%}")
+    
+    st.write("**Metas Activas:**")
+    for meta in cerebro.generador_metas.metas_actuales:
+        st.write(f"• {meta}")
+
+# Panel de aprendizaje
+with st.expander("🧠 Panel de Aprendizaje"):
+    st.subheader("Conocimiento Acumulado")
+    
     patrones = cerebro.sistema_aprendizaje.conocimiento["patrones_aprendidos"]
     if patrones:
         st.write("**Patrones aprendidos:**")
         for patron, datos in list(patrones.items())[:5]:
-            st.write(f"- {patron}: {datos['efectividad']:.2f} efectividad")
+            st.write(f"- {patron}: {datos['efectividad']:.2f} efectividad ({datos['veces_usado']} usos)")
     
-    # Mostrar eficiencia de neuronas
     eficiencias = cerebro.sistema_aprendizaje.conocimiento["eficiencia_neuronas"]
     if eficiencias:
         st.write("**Eficiencia de neuronas:**")
@@ -551,8 +797,8 @@ with st.expander("📊 Panel de Evolución y Aprendizaje"):
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center;'>
-    <small>🧠 Cerebro Autónomo con Autoaprendizaje - Holguín, Cuba 2025</small><br>
-    <small>© 2025 Ronald Rodriguez Laguna - Bajo Licencia Cubana Abierta v1.0</small>
+    <small>🧠 Cerebro Autónomo con Auto-Modificación - Hito 1.1 Implementado</small><br>
+    <small>© 2025 Ronald Rodriguez Laguna - Bajo Licencia Cubana Abierta v1.0</small><br>
+    <small>🚀 Progreso hacia Singularidad: 32-35%</small>
 </div>
 """, unsafe_allow_html=True)
-
