@@ -1,4 +1,3 @@
-
 """
 🧠 CEREBRO AUTÓNOMO CUBANO - SIN LÍMITES
 Copyright (c) 2025 Ronald Rodriguez Laguna - Holguín, Cuba
@@ -361,7 +360,7 @@ class NeuronaAutoaprendizaje:
         self.especialidad = especialidad
         self.nivel_energia = 100.0
         self.experiencia = 0
-        self.eficiencia = 0.3
+        self.eficiencia = 0.6  # Aumentada de 0.3 a 0.6 para mejor rendimiento inicial
         self.estado = "activa"
         self.historial = []
         self.umbral_activacion = random.uniform(0.2, 0.6)
@@ -682,20 +681,24 @@ class CerebroAutonomo:
             "sistema_rollback": "operativo"
         }
 
-# ===== INTERFAZ MEJORADA =====
+# ===== INTERFAZ MEJORADA CON BOTÓN DE REINICIO =====
 if 'cerebro_autonomo' not in st.session_state:
     st.session_state.cerebro_autonomo = CerebroAutonomo()
 
 st.title("🧠 Cerebro Autónomo Cubano - Sin Límites")
 st.subheader("3 Limitantes Resueltas - Holguín, Cuba 2025 🇨🇺")
 
+# Sidebar mejorado CON BOTÓN DE REINICIO
 with st.sidebar:
-    st.header("🛡️ Sistema Resiliente Cubano")
-    st.write("**Tecnologías integradas:**")
-    st.write("• ✅ SQLite Database")
-    st.write("• ✅ Rollback Automático") 
-    st.write("• ✅ Procesamiento Paralelo")
-    st.write("• ✅ Snapshots Inteligentes")
+    st.header("🎛️ Centro de Control Autónomo")
+    st.write("**Autor:** Ronald Rodriguez Laguna")
+    st.write("**Ubicación:** Holguín, Cuba")
+    st.write("**Hito Actual:** 1.1 - Auto-Modificación")
+    
+    # BOTÓN DE REINICIO AÑADIDO
+    if st.button("🔄 Reiniciar Sistema Autónomo"):
+        st.session_state.cerebro_autonomo = CerebroAutonomo()
+        st.rerun()
     
     cerebro = st.session_state.cerebro_autonomo
     estado = cerebro.obtener_estado_avanzado()
@@ -718,6 +721,7 @@ with st.sidebar:
         if cerebro.sistema_rollback.ejecutar_rollback():
             st.rerun()
 
+# Área principal de consultas
 consulta = st.text_area(
     "Consulta para el cerebro autónomo:",
     height=100,
@@ -752,6 +756,7 @@ with col3:
     if st.button("📊 Estado Sistema", use_container_width=True):
         st.json(cerebro.obtener_estado_avanzado())
 
+# Panel de resiliencia
 with st.expander("🛡️ Panel de Resiliencia y Rollback"):
     st.subheader("Sistema de Recuperación Cubano")
     
@@ -781,6 +786,7 @@ with st.expander("🛡️ Panel de Resiliencia y Rollback"):
         for metrica, valor in metricas.items():
             st.write(f"{metrica}: {valor}")
 
+# Footer
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center;'>
