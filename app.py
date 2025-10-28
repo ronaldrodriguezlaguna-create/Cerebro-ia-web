@@ -1,3 +1,4 @@
+
 """
 🧠 CEREBRO AUTÓNOMO CUBANO - SIN LÍMITES
 Copyright (c) 2025 Ronald Rodriguez Laguna - Holguín, Cuba
@@ -45,7 +46,6 @@ class BaseDatosCubana:
         conn = sqlite3.connect(self.archivo_db)
         cursor = conn.cursor()
         
-        # Tabla de conocimiento principal
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS conocimiento (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -57,7 +57,6 @@ class BaseDatosCubana:
             )
         ''')
         
-        # Tabla de snapshots (rollback)
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS snapshots (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,7 +68,6 @@ class BaseDatosCubana:
             )
         ''')
         
-        # Tabla de métricas de rendimiento
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS metricas (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -122,13 +120,11 @@ class BaseDatosCubana:
         return conocimiento
     
     def crear_snapshot(self, datos_estado, efectividad):
-        """Crea snapshot para rollback - máximo 5 guardados"""
         hash_integridad = hashlib.md5(json.dumps(datos_estado).encode()).hexdigest()
         
         conn = sqlite3.connect(self.archivo_db)
         cursor = conn.cursor()
         
-        # Limitar a 5 snapshots máximo
         cursor.execute("SELECT COUNT(*) FROM snapshots")
         if cursor.fetchone()[0] >= 5:
             cursor.execute("DELETE FROM snapshots WHERE id IN (SELECT id FROM snapshots ORDER BY timestamp ASC LIMIT 1)")
@@ -145,7 +141,6 @@ class BaseDatosCubana:
         return hash_integridad
     
     def obtener_ultimo_snapshot_estable(self):
-        """Obtiene el último snapshot estable para rollback"""
         conn = sqlite3.connect(self.archivo_db)
         cursor = conn.cursor()
         
@@ -175,14 +170,24 @@ class SistemaRollback:
         self.ultimo_estado_stable = None
         self.alertas_activas = []
     
+    def _calcular_efectividad_promedio(self):
+        """Calcula efectividad promedio de últimas consultas"""
+        if not self.cerebro.historial:
+            return 0.5
+        
+        ultimas_consultas = self.cerebro.historial[-5:]
+        if not ultimas_consultas:
+            return 0.5
+            
+        efectividades = [consulta['efectividad'] for consulta in ultimas_consultas]
+        return sum(efectividades) / len(efectividades)
+    
     def crear_punto_restauracion(self):
         """Crea snapshot antes de modificaciones riesgosas"""
         estado_actual = self._capturar_estado_completo()
         efectividad_actual = self._calcular_efectividad_promedio()
         
         hash_snapshot = self.cerebro.base_datos.crear_snapshot(estado_actual, efectividad_actual)
-        
-        st.toast(f"📸 Snapshot creado: {hash_snapshot[:8]}...", icon="✅")
         return hash_snapshot
     
     def _capturar_estado_completo(self):
@@ -212,15 +217,15 @@ class SistemaRollback:
         snapshot = self.cerebro.base_datos.obtener_ultimo_snapshot_estable()
         
         if not snapshot:
-            return "continuar"  # No hay snapshot para comparar
+            return "continuar"
         
         efectividad_previa = snapshot["efectividad_previa"]
         diferencia = efectividad_previa - efectividad_nueva
         
-        if diferencia > 0.3:  # Caída del 30% o más
+        if diferencia > 0.3:
             self.alertas_activas.append(f"🚨 Caída crítica: {diferencia:.1%}")
             return "rollback_automatico"
-        elif diferencia > 0.15:  # Caída del 15%
+        elif diferencia > 0.15:
             self.alertas_activas.append(f"⚠️ Degradación: {diferencia:.1%}")
             return "notificar_usuario"
         else:
@@ -239,7 +244,6 @@ class SistemaRollback:
         
         estado = snapshot["datos"]
         
-        # Restaurar neuronas
         for i, datos_neurona in enumerate(estado["neuronas"]):
             if i < len(self.cerebro.neuronas):
                 neurona = self.cerebro.neuronas[i]
@@ -248,26 +252,46 @@ class SistemaRollback:
                 neurona.habilidades_aprendidas = datos_neurona["habilidades_aprendidas"].copy()
                 neurona.umbral_activacion = datos_neurona["umbral_activacion"]
         
-        # Restaurar conocimiento
         self.cerebro.sistema_aprendizaje.conocimiento = estado["conocimiento"]
         self.cerebro.sistema_aprendizaje.guardar_conocimiento()
         
-        # Restaurar estado del sistema
         self.cerebro.energia_sistema = estado["energia_sistema"]
         self.cerebro.evoluciones = estado["evoluciones"]
         
         st.success(f"✅ Rollback completado a {snapshot['timestamp'][:16]}")
         return True
 
+    def _obtener_snapshot_por_id(self, snapshot_id):
+        """Obtiene snapshot por ID"""
+        conn = sqlite3.connect(self.cerebro.base_datos.archivo_db)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT id, timestamp, datos, efectividad_previa 
+            FROM snapshots 
+            WHERE id = ?
+        ''', (snapshot_id,))
+        
+        resultado = cursor.fetchone()
+        conn.close()
+        
+        if resultado:
+            return {
+                "id": resultado[0],
+                "timestamp": resultado[1],
+                "datos": json.loads(resultado[2]),
+                "efectividad_previa": resultado[3]
+            }
+        return None
+
 # ===== SOLUCIÓN 3: PROCESAMIENTO PARALELO OPTIMIZADO =====
 class ProcesadorParalelo:
-    def __init__(self, max_workers=3):  # Bajo para evitar sobrecarga
+    def __init__(self, max_workers=3):
         self.max_workers = max_workers
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
         self.lock = threading.Lock()
     
     def procesar_neuronas_paralelo(self, neuronas, consulta, contexto=None):
-        """Procesa neuronas en paralelo de forma optimizada"""
         futures = []
         
         for neurona in neuronas:
@@ -278,7 +302,7 @@ class ProcesadorParalelo:
         resultados = []
         for neurona, future in futures:
             try:
-                resultado = future.result(timeout=10)  # Timeout de seguridad
+                resultado = future.result(timeout=10)
                 resultados.append(resultado)
             except Exception as e:
                 resultado = {
@@ -291,7 +315,6 @@ class ProcesadorParalelo:
         return resultados
     
     def _procesar_neurona_segura(self, neurona, consulta, contexto):
-        """Envuelve el procesamiento con manejo de errores"""
         try:
             return neurona.procesar(consulta, contexto)
         except Exception as e:
@@ -349,7 +372,7 @@ class NeuronaAutoaprendizaje:
         if self.nivel_energia <= 0:
             return {"error": f"{self.nombre} sin energía"}
         
-        self.nivel_energia -= 1.0  # Consumo optimizado
+        self.nivel_energia -= 1.0
         self.experiencia += 1
         
         resultado = self._procesamiento_inteligente(entrada, contexto)
@@ -358,10 +381,9 @@ class NeuronaAutoaprendizaje:
         if desarrollo:
             resultado["desarrollo"] = desarrollo
         
-        # Historial optimizado (solo últimos 10)
         self.historial.append({
             "timestamp": time.time(),
-            "entrada": entrada[:100],  # Solo primeros 100 chars
+            "entrada": entrada[:100],
             "resultado": resultado.get("confianza", 0),
             "efectivo": resultado.get("confianza", 0) > 0.5
         })
@@ -382,7 +404,6 @@ class NeuronaAutoaprendizaje:
                 return f"🎯 {self.nombre} desarrolló {nueva_habilidad}"
         return None
 
-    # ... (métodos de procesamiento inteligente se mantienen igual)
     def _procesamiento_inteligente(self, entrada, contexto):
         entrada = entrada.lower()
         
@@ -391,12 +412,20 @@ class NeuronaAutoaprendizaje:
         else:
             confianza_base = self.eficiencia
         
-        # Mapeo de especialidades a métodos (igual que antes)
         if self.especialidad == "percepcion_avanzada":
             return self._analisis_adaptativo(entrada, confianza_base)
         elif self.especialidad == "logica_estructurada":
             return self._razonamiento_evolutivo(entrada, confianza_base)
-        # ... (otros métodos especializados)
+        elif self.especialidad == "memoria_asociativa":
+            return self._conexiones_inteligentes(entrada, confianza_base)
+        elif self.especialidad == "creatividad_emergente":
+            return self._generacion_adaptativa(entrada, confianza_base)
+        elif self.especialidad == "inteligencia_emocional":
+            return self._procesamiento_empatico(entrada, confianza_base)
+        elif self.especialidad == "coordinacion_central":
+            return self._gestion_inteligente(entrada, confianza_base, contexto)
+        elif self.especialidad == "autoaprendizaje":
+            return self._procesamiento_autonomo(entrada, confianza_base)
         else:
             return self._procesamiento_base(entrada, confianza_base)
 
@@ -437,12 +466,101 @@ class NeuronaAutoaprendizaje:
             "nivel_razonamiento": "avanzado" if self.experiencia > 10 else "básico"
         }
 
+    def _conexiones_inteligentes(self, texto, confianza):
+        base_conocimiento = {
+            "autoaprendizaje": [
+                "El aprendizaje automático mejora con la experiencia",
+                "La retroalimentación refina los patrones cognitivos"
+            ],
+            "neurociencia": [
+                "La plasticidad neuronal permite el aprendizaje continuo",
+                "Las sinapsis se fortalecen con el uso"
+            ]
+        }
+        
+        conexiones = []
+        for dominio, conceptos in base_conocimiento.items():
+            for concepto in conceptos:
+                if any(palabra in texto for palabra in concepto.lower().split()[:2]):
+                    conexiones.append({
+                        "dominio": dominio,
+                        "concepto": concepto,
+                        "relevancia": random.uniform(0.6, 0.95)
+                    })
+        
+        return {
+            "tipo": "conexiones_inteligentes",
+            "conexiones": conexiones[:2],
+            "confianza": confianza * 0.85
+        }
+
+    def _generacion_adaptativa(self, texto, confianza):
+        ideas = [
+            f"Sistema de aprendizaje autónomo basado en {random.choice(['experiencia', 'patrones', 'retroalimentación'])}",
+            f"Arquitectura neuronal que {random.choice(['evoluciona', 'se adapta', 'aprende continuamente'])}"
+        ]
+        
+        return {
+            "tipo": "creatividad_adaptativa",
+            "ideas": ideas,
+            "confianza": confianza * 0.8
+        }
+
+    def _procesamiento_empatico(self, texto, confianza):
+        emociones = {
+            "curiosidad": self._calcular_curiosidad(texto),
+            "interes": self._calcular_interes(texto)
+        }
+        
+        return {
+            "tipo": "procesamiento_empatico",
+            "emocion_principal": max(emociones, key=emociones.get),
+            "intensidad": max(emociones.values()),
+            "confianza": confianza * 0.75
+        }
+
+    def _gestion_inteligente(self, texto, confianza, contexto):
+        recursos = self._evaluar_recursos_inteligentes(texto)
+        
+        return {
+            "tipo": "gestion_inteligente",
+            "recursos_recomendados": recursos,
+            "confianza": confianza * 0.9,
+            "estrategia": "optimizada" if self.experiencia > 5 else "base"
+        }
+
+    def _procesamiento_autonomo(self, texto, confianza):
+        return {
+            "tipo": "procesamiento_autonomo",
+            "analisis_aprendizaje": f"Neurona con {self.experiencia} experiencias",
+            "habilidades_desarrolladas": self.habilidades_aprendidas,
+            "confianza": confianza
+        }
+
     def _procesamiento_base(self, texto, confianza):
         return {
             "tipo": "procesamiento_base",
             "resultado": f"Procesado por {self.nombre} (exp: {self.experiencia})",
             "confianza": confianza
         }
+
+    def _evaluar_recursos_inteligentes(self, texto):
+        recursos = []
+        if any(p in texto for p in ["analizar", "comprender"]):
+            recursos.append("percepcion_avanzada")
+        if any(p in texto for p in ["razonar", "lógica"]):
+            recursos.append("logica_estructurada")
+        if any(p in texto for p in ["recordar", "conectar"]):
+            recursos.append("memoria_asociativa")
+        return recursos if recursos else ["percepcion_avanzada", "logica_estructurada"]
+
+    def _calcular_curiosidad(self, texto):
+        palabras = ["cómo", "por qué", "qué", "interesante"]
+        return sum(1 for p in palabras if p in texto) / len(palabras)
+
+    def _calcular_interes(self, texto):
+        palabras = ["importante", "útil", "valioso", "interesante"]
+        return sum(1 for p in palabras if p in texto) / len(palabras)
 
 # ===== CEREBRO AUTÓNOMO MEJORADO =====
 class CerebroAutonomo:
@@ -471,17 +589,14 @@ class CerebroAutonomo:
         self.ubicacion = "Holguín, Cuba 2025"
 
     def procesar_consulta(self, consulta):
-        # Crear punto de restauración antes de procesar
         self.sistema_rollback.crear_punto_restauracion()
         
-        # Procesamiento paralelo optimizado
         resultados = self.procesador_paralelo.procesar_neuronas_paralelo(
             self.neuronas, consulta
         )
         
         efectividad = self._evaluar_efectividad(resultados)
         
-        # Aprender de la experiencia
         self.sistema_aprendizaje.aprender_de_experiencia(consulta, resultados, efectividad)
         
         experiencia = {
@@ -494,13 +609,11 @@ class CerebroAutonomo:
         
         self.historial.append(experiencia)
         
-        # Verificar estabilidad y hacer rollback si es necesario
         decision_rollback = self.sistema_rollback.evaluar_estabilidad(efectividad)
         if decision_rollback == "rollback_automatico":
             st.warning("🔄 Rollback automático por caída de rendimiento")
             self.sistema_rollback.ejecutar_rollback()
         
-        # Ciclo de auto-mejora cada 5 consultas (menos frecuente para ahorro)
         if len(self.historial) % 5 == 0:
             self.ejecutar_ciclo_auto_mejora()
         
@@ -532,18 +645,15 @@ class CerebroAutonomo:
         }
 
     def _actualizar_sistema(self):
-        self.energia_sistema -= 1  # Consumo optimizado
+        self.energia_sistema -= 1
         
         if self.energia_sistema <= 0:
             self.energia_sistema = 1000
             self.evoluciones += 1
 
     def ejecutar_ciclo_auto_mejora(self):
-        """Ciclo de mejora con rollback integrado"""
-        # Crear snapshot antes de mejoras
         self.sistema_rollback.crear_punto_restauracion()
         
-        # Aplicar mejoras simples
         mejoras = []
         for neurona in self.neuronas:
             if neurona.experiencia > 15 and neurona.eficiencia < 0.8:
@@ -579,7 +689,6 @@ if 'cerebro_autonomo' not in st.session_state:
 st.title("🧠 Cerebro Autónomo Cubano - Sin Límites")
 st.subheader("3 Limitantes Resueltas - Holguín, Cuba 2025 🇨🇺")
 
-# Sidebar con nuevas funcionalidades
 with st.sidebar:
     st.header("🛡️ Sistema Resiliente Cubano")
     st.write("**Tecnologías integradas:**")
@@ -599,7 +708,6 @@ with st.sidebar:
         st.metric("Energía", estado["energia_sistema"])
         st.metric("Experiencia Total", estado["experiencia_total"])
     
-    # Nuevos controles de resiliencia
     st.subheader("🛡️ Controles de Seguridad")
     
     if st.button("📸 Crear Snapshot Manual"):
@@ -609,12 +717,7 @@ with st.sidebar:
     if st.button("🔄 Rollback Manual"):
         if cerebro.sistema_rollback.ejecutar_rollback():
             st.rerun()
-    
-    if st.button("🗑️ Limpiar Snapshots Viejos"):
-        # Implementar limpieza
-        st.info("Snapshots optimizados automáticamente")
 
-# Área principal
 consulta = st.text_area(
     "Consulta para el cerebro autónomo:",
     height=100,
@@ -633,8 +736,7 @@ with col1:
             efectividad = resultado["resumen"]["efectividad_sistema"]
             st.metric("Efectividad", f"{efectividad:.2f}")
             
-            # Mostrar resultados optimizados
-            for res in resultado["resultados"][:3]:  # Solo mostrar 3 principales
+            for res in resultado["resultados"][:3]:
                 emoji = "⚡" if res.get("confianza", 0) > 0.7 else "🔍"
                 st.write(f"{emoji} {res.get('tipo', 'Procesamiento').replace('_', ' ').title()}")
                 st.progress(res.get("confianza", 0))
@@ -650,7 +752,6 @@ with col3:
     if st.button("📊 Estado Sistema", use_container_width=True):
         st.json(cerebro.obtener_estado_avanzado())
 
-# Panel de resiliencia
 with st.expander("🛡️ Panel de Resiliencia y Rollback"):
     st.subheader("Sistema de Recuperación Cubano")
     
@@ -658,7 +759,6 @@ with st.expander("🛡️ Panel de Resiliencia y Rollback"):
     
     with col1:
         st.write("**Snapshots Disponibles:**")
-        # Mostrar snapshots disponibles
         st.info("Sistema mantiene últimos 5 snapshots automáticamente")
         
         st.write("**Alertas Activas:**")
@@ -681,7 +781,6 @@ with st.expander("🛡️ Panel de Resiliencia y Rollback"):
         for metrica, valor in metricas.items():
             st.write(f"{metrica}: {valor}")
 
-# Footer mejorado
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center;'>
