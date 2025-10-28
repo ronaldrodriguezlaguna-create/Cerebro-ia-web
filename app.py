@@ -1,3 +1,17 @@
+        """
+🧠 CEREBRO ARTIFICIAL AVANZADO
+Copyright (c) 2025 Ronald Rodriguez Laguna - Holguín, Cuba
+Bajo Licencia Cubana Abierta v1.0
+
+PROPIEDAD INTELECTUAL DE:
+Ronald Rodriguez Laguna - Holguín, Cuba
+
+PROHIBIDO:
+❌ Patentar por corporaciones
+❌ Apropiación intelectual
+❌ Uso militar o opresivo
+"""
+
 import streamlit as st
 import time
 import uuid
@@ -5,12 +19,40 @@ import random
 import json
 from datetime import datetime
 
-# ===== CONFIGURACIÓN AVANZADA =====
+# ===== LICENCIA HOLGUINERA 2025 =====
+def licencia_holguin():
+    return {
+        "autor": "Ronald Rodriguez Laguna",
+        "ciudad": "Holguín", 
+        "pais": "Cuba",
+        "año": 2025,
+        "licencia": "Cubana Abierta v1.0",
+        "prohibido": "Patentar por corporaciones"
+    }
+
+# ===== CONFIGURACIÓN CON IDENTIDAD HOLGUINERA 2025 =====
 st.set_page_config(
-    page_title="🧠 Cerebro IA Avanzado",
+    page_title="🧠 Cerebro IA - Ronald Rodriguez Laguna (Holguín 2025)",
     page_icon="🧠",
     layout="wide"
 )
+
+# MOSTRAR DERECHOS DE AUTOR EN SIDEBAR
+with st.sidebar:
+    st.header("© Derechos de Autor 2025")
+    st.write("**Autor:** Ronald Rodriguez Laguna")
+    st.write("**Ubicación:** Holguín, Cuba")
+    st.write("**Año:** 2025")
+    st.write("**Licencia:** Cubana Abierta v1.0")
+    st.write("**Prohibido:** Patentar por corporaciones")
+    
+    # Mostrar certificado de autoría
+    if st.button("📜 Ver Certificado de Autoría"):
+        certificado = licencia_holguin()
+        st.json(certificado)
+    
+    st.markdown("---")
+    st.caption("Desarrollado con orgullo en Holguín, Cuba 2025")
 
 # ===== SISTEMA CEREBRAL MEJORADO =====
 class NeuronaAvanzada:
@@ -25,6 +67,7 @@ class NeuronaAvanzada:
         self.conexiones = []
         self.historial = []
         self.umbral_activacion = random.uniform(0.2, 0.6)
+        self.origen = "Holguín, Cuba 2025"  # Identidad territorial actualizada
         
     def desarrollar(self):
         if self.experiencia > 5 and self.estado == "activa":
@@ -94,7 +137,8 @@ class NeuronaAvanzada:
             "tipo": "analisis_multinivel",
             "capas": capas_analisis,
             "confianza": self.eficiencia,
-            "energia_utilizada": 2.0
+            "energia_utilizada": 2.0,
+            "origen": self.origen
         }
 
     def _razonamiento_complejo(self, texto, contexto):
@@ -112,7 +156,8 @@ class NeuronaAvanzada:
             "metodologia": metodologia,
             "pasos": metodologias[metodologia],
             "enfoque": self._determinar_enfoque(texto),
-            "confianza": self.eficiencia * 0.9
+            "confianza": self.eficiencia * 0.9,
+            "origen": self.origen
         }
 
     def _conexiones_profundas(self, texto):
@@ -153,7 +198,8 @@ class NeuronaAvanzada:
             "tipo": "memoria_asociativa_avanzada",
             "conexiones": conexiones[:4],
             "dominios_implicados": list(set(c["dominio"] for c in conexiones)),
-            "confianza": self.eficiencia * 0.85
+            "confianza": self.eficiencia * 0.85,
+            "origen": self.origen
         }
 
     def _generacion_innovadora(self, texto, contexto):
@@ -176,7 +222,8 @@ class NeuronaAvanzada:
             "tecnicas": random.sample(tecnicas_avanzadas, 2),
             "ideas": random.sample(ideas_innovadoras, 3),
             "potencial_innovador": random.uniform(0.7, 0.95),
-            "confianza": self.eficiencia * 0.8
+            "confianza": self.eficiencia * 0.8,
+            "origen": self.origen
         }
 
     def _procesamiento_emocional(self, texto):
@@ -202,7 +249,8 @@ class NeuronaAvanzada:
             "intensidad": analisis_sentimientos[emocion_principal],
             "respuesta_adaptativa": respuestas_adaptativas[emocion_principal],
             "analisis_completo": analisis_sentimientos,
-            "confianza": self.eficiencia * 0.75
+            "confianza": self.eficiencia * 0.75,
+            "origen": self.origen
         }
 
     def _gestion_recursos(self, texto, contexto):
@@ -216,7 +264,8 @@ class NeuronaAvanzada:
             "prioridad": prioridad,
             "secuencia_optima": self._generar_secuencia(recursos_necesarios),
             "estimacion_tiempo": len(recursos_necesarios) * 2,
-            "confianza": self.eficiencia * 0.9
+            "confianza": self.eficiencia * 0.9,
+            "origen": self.origen
         }
 
     def _detectar_temas(self, texto):
@@ -301,8 +350,9 @@ class NeuronaAvanzada:
     def _procesamiento_base(self, texto):
         return {
             "tipo": "procesamiento_base",
-            "resultado": f"Procesado por {self.nombre}",
-            "confianza": self.eficiencia
+            "resultado": f"Procesado por {self.nombre} desde Holguín, Cuba 2025",
+            "confianza": self.eficiencia,
+            "origen": self.origen
         }
 
 # ===== NUEVA NEURONA DE INTUICIÓN ARTIFICIAL =====
@@ -323,7 +373,8 @@ class NeuronaIntuicion(NeuronaAvanzada):
             "nivel_confianza_intuitivo": random.uniform(0.6, 0.95),
             "hipotesis_emergentes": self._generar_hipotesis(entrada),
             "corazonadas": self._generar_corazonadas(entrada),
-            "confianza": self.eficiencia * 0.85
+            "confianza": self.eficiencia * 0.85,
+            "origen": self.origen
         }
     
     def _generar_intuiciones(self, texto):
@@ -384,6 +435,8 @@ class CerebroAvanzado:
         self.historial = []
         self.energia_sistema = 1000
         self.evoluciones = 0
+        self.autor = "Ronald Rodriguez Laguna"
+        self.ubicacion = "Holguín, Cuba 2025"
 
     def procesar_consulta(self, consulta):
         # Primero, la coordinación central planifica
@@ -433,7 +486,9 @@ class CerebroAvanzado:
             "confianza_sistema": round(eficiencia_sistema, 3),
             "nivel_coordinacion": "alto" if planificacion else "básico",
             "energia_restante": self.energia_sistema,
-            "evolucion_sistema": self.evoluciones
+            "evolucion_sistema": self.evoluciones,
+            "autor": self.autor,
+            "ubicacion": self.ubicacion
         }
 
     def _actualizar_energia(self):
@@ -449,6 +504,9 @@ class CerebroAvanzado:
 
     def obtener_estado_avanzado(self):
         return {
+            "autor": self.autor,
+            "ubicacion": self.ubicacion,
+            "año": 2025,
             "total_neuronas": len(self.neuronas),
             "energia_sistema": self.energia_sistema,
             "evoluciones": self.evoluciones,
@@ -457,11 +515,21 @@ class CerebroAvanzado:
             "neuronas_activas": len([n for n in self.neuronas if n.nivel_energia > 0])
         }
 
-# ===== INTERFAZ STREAMLIT AVANZADA =====
+# ===== INTERFAZ STREAMLIT AVANZADA 2025 =====
 if 'cerebro_avanzado' not in st.session_state:
     st.session_state.cerebro_avanzado = CerebroAvanzado()
 
-st.title("🧠 Cerebro IA - Sistema Avanzado de Conciencia Artificial")
+st.title("🧠 Cerebro IA - Ronald Rodriguez Laguna")
+st.subheader("Desde Holguín, Cuba 2025 🇨🇺")
+
+# Banner de derechos de autor 2025
+st.markdown("""
+<div style='background-color: #f0f2f6; padding: 10px; border-radius: 5px; border-left: 5px solid #ff4b4b;'>
+    <strong>© 2025 Ronald Rodriguez Laguna - Holguín, Cuba</strong><br>
+    <small>Bajo Licencia Cubana Abierta v1.0 - Prohibida la apropiación por corporaciones</small>
+</div>
+""", unsafe_allow_html=True)
+
 st.markdown("**Arquitectura neuronal distribuida con capacidades emergentes avanzadas**")
 
 # Sidebar avanzado
@@ -584,6 +652,10 @@ with col1:
                             st.write(f"✨ {corazonada}")
                         st.write(f"**Confianza intuitiva:** {res['nivel_confianza_intuitivo']:.2f}")
                     
+                    # Mostrar origen en cada resultado
+                    if "origen" in res:
+                        st.caption(f"📍 {res['origen']}")
+                    
                     if "confianza" in res:
                         st.progress(res["confianza"], text=f"Confianza: {res['confianza']:.2f}")
 
@@ -594,6 +666,7 @@ with col2:
     estado = cerebro.obtener_estado_avanzado()
     
     # Métricas principales
+    st.metric("Año", estado["año"])
     st.metric("Evoluciones del Sistema", estado["evoluciones"])
     st.metric("Energía del Sistema", estado["energia_sistema"])
     st.metric("Neuronas Activas", estado["neuronas_activas"])
@@ -610,6 +683,7 @@ with col2:
             with col_n2:
                 st.progress(neurona.nivel_energia/100, text=f"Energía: {neurona.nivel_energia:.1f}")
                 st.caption(f"Estado: {neurona.estado}")
+            st.caption(f"📍 {neurona.origen}")
 
 # Panel de evolución del sistema
 with st.expander("🔬 Laboratorio de Evolución del Sistema"):
@@ -637,8 +711,13 @@ with st.expander("🔬 Laboratorio de Evolución del Sistema"):
         nueva_experimental = cerebro.agregar_neurona_personalizada(nombre_experimental, tipo_elegido)
         st.success(f"🧪 {nueva_experimental.nombre} generada experimentalmente!")
 
-# Footer avanzado
+# Footer holguinero 2025
 st.markdown("---")
-st.caption("🧠 Sistema de Conciencia Artificial Avanzado - Arquitectura Neuronal Distribuida")
-st.caption(f"⚡ Energía del sistema: {estado['energia_sistema']} | 🎯 Evoluciones: {estado['evoluciones']} | 🧪 Neuronas: {estado['total_neuronas']}")
+st.markdown("""
+<div style='text-align: center;'>
+    <small>🧠 Desarrollado con orgullo en Holguín, Cuba 2025 🇨🇺</small><br>
+    <small>© 2025 Ronald Rodriguez Laguna - Todos los derechos reservados</small><br>
+    <small>🛡️ Protegido por Licencia Cubana Abierta v1.0</small>
+</div>
+""", unsafe_allow_html=True)
 
